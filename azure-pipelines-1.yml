@@ -65,3 +65,46 @@ stages:
               appType: webAppLinux
               appName: $(webAppName)
               package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+
+- stage: 'Deploy_QA'
+  displayName: 'Deploy qa'
+  dependsOn: 'Deploy_DEV'
+  jobs:
+  - deployment: 'Prod_Deploy_WebApp'
+    displayName: 'Deploy QA'
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'QA'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Azure Web App Deploy: springboot567'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              appName: $(webAppName)
+              package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+
+
+- stage: 'Deploy_PROD'
+  displayName: 'Deploy prod'
+  dependsOn: 'Deploy_QA'
+  jobs:
+  - deployment: 'Prod_Deploy_WebApp'
+    displayName: 'Deploy PROD'
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'PROD'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Azure Web App Deploy: springboot567'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              appName: $(webAppName)
+              package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
