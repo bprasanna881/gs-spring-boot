@@ -53,6 +53,7 @@ stages:
     displayName: 'Deploy DEV'
     pool:
       vmImage: $(vmImageName)
+    environment: 'DEV.default'
     strategy:
       runOnce:
         deploy:
