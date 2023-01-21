@@ -45,16 +45,15 @@ stages:
     - upload: $(Build.ArtifactStagingDirectory)
       artifact: drop
 
-- stage: Deploy
-  displayName: Deploy stage
+- stage: 'Deploy_DEV'
+  displayName: 'Deploy dev'
   dependsOn: Build
-  condition: succeeded()
   jobs:
-  - deployment: DeployLinuxWebApp
-    displayName: Deploy Linux Web App
-    environment: $(environmentName)
+  - deployment: 'Dev_Deploy_WebApp'
+    displayName: 'Deploy DEV'
     pool:
       vmImage: $(vmImageName)
+    environment: 'DEV.default'
     strategy:
       runOnce:
         deploy:
